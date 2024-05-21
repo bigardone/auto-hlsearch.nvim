@@ -3,8 +3,10 @@ local M = {}
 local defaults = {
   remap_keys = { "/", "?", "*", "#", "n", "N" },
   create_commands = true,
-  pre_hook = function() end,
-  post_hook = function() end,
+  pre_hook = function()
+  end,
+  post_hook = function()
+  end,
 }
 
 -- Remap provided keys in order to use activate() function
@@ -22,20 +24,29 @@ local function remap_keys(keys)
       -- We need to consider the remmaping when use expr options
       -- For lua function
       if keymap.callback then
-        vim.keymap.set("n", lhs, function () M.activate() return keymap.callback() end, opts)
-
+        vim.keymap.set("n", lhs, function()
+          M.activate()
+          return keymap.callback()
+        end, opts)
       elseif keymap.expr == 1 and keymap.rhs then
         -- For vimscript function
-        vim.keymap.set("n", lhs, function () M.activate() return vim.api.nvim_eval(keymap.rhs) end , opts)
+        vim.keymap.set("n", lhs, function()
+          M.activate()
+          return vim.api.nvim_eval(keymap.rhs)
+        end, opts)
 
         -- For vimscript function, not use expr options
       elseif keymap.rhs then
-        vim.keymap.set("n", lhs, function () M.activate() return keymap.rhs end, opts)
-
+        vim.keymap.set("n", lhs, function()
+          M.activate()
+          return keymap.rhs
+        end, opts)
       end
-
     else
-      vim.keymap.set("n", lhs, function() M.activate() return lhs end, { expr = true })
+      vim.keymap.set("n", lhs, function()
+        M.activate()
+        return lhs
+      end, { expr = true })
     end
   end
 
@@ -129,7 +140,7 @@ local function apply_user_config(user_config)
   local config = vim.tbl_deep_extend("force", {}, defaults)
 
   if user_config then
-    if vim.tbl_islist(user_config.remap_keys) then
+    if vim.islist(user_config.remap_keys) then
       config.remap_keys = user_config.remap_keys
     end
     if type(user_config.create_commands) == "boolean" then
